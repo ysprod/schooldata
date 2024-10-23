@@ -1,12 +1,8 @@
 "use client";
+
 import Image from "next/image";
 import { getRandomInt } from '../lib/utils';
-import {
-  RadialBarChart,
-  RadialBar,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { RadialBarChart, RadialBar, ResponsiveContainer, } from "recharts";
 
 const data = [
   {
@@ -27,7 +23,7 @@ const data = [
 ];
 
 const CountChart = () => {
-  
+
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
       <div className="flex justify-between items-center">

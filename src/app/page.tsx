@@ -1,7 +1,20 @@
-const Homepage = () => {
-  return (
-    <div className=''>Bienvenue</div>
-  )
-}
+"use client";
+import { useRegister } from "@/hooks/useregister";
+import { useAuth } from "@/firebase/auth";
+import { useEffect } from "react";
+import Debut from "../components/debut";
 
-export default Homepage
+const Homepage = () => {
+  const { navigate } = useRegister();
+  const { authUser } = useAuth();
+
+  useEffect(() => {
+    if (authUser) {
+      navigate("admin");
+    }
+  }, [authUser, navigate]);
+
+  return <Debut />;
+};
+
+export default Homepage;

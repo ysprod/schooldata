@@ -1,8 +1,8 @@
 import { getRandomInt } from "@/lib/utils";
 import Image from "next/image";
-
+ 
 export type UserCardProps = {
-  type: string,
+  type:  "Eleve"  |   "Professeur"  | "Parent"  |"Personnel" ,
   valeur?: number,
   min?: number,
   max?: number

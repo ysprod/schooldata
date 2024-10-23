@@ -1,22 +1,40 @@
 import type { Metadata } from "next";
+import "./styles/globals.css";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
+import { AuthUserProvider } from "@/firebase/auth";
+import Appbar from "@/components/Appbar";
+import Footer from "@/components/footer";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DATA SCHOOL",
-  description: "Gestion des etablissements publics et privés",
+  title: "Ecole +",
+  description: "Par YAYA SIDIBE",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
+}
+
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="fr">
+      <body className={inter.className}>
+        <AuthUserProvider>
+          <ToastContainer />
+          <Appbar />
+          <div className="flex flex-col items-center mx-auto max-w-7xl">
+            {children}
+          </div>
+          <Toaster />
+          <Footer />
+
+        </AuthUserProvider>
+      </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

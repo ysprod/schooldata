@@ -1,37 +1,32 @@
-import { FieldError } from "react-hook-form";
+import React from 'react';
 
-type InputFieldProps = {
+interface InputFieldProps {
   label: string;
-  type?: string;
-  register: any;
   name: string;
-  defaultValue?: string;
-  error?: FieldError;
-  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-};
+  type?: string;
+  register?: any;  
+  error?: string;  
+  defaultValue?: any;
+}
 
-const InputField = ({
+const InputField: React.FC<InputFieldProps> = ({
   label,
-  type = "text",
-  register,
   name,
-  defaultValue,
+  type = 'text',
+  register,
   error,
-  inputProps,
-}: InputFieldProps) => {
+  defaultValue,
+}) => {
   return (
     <div className="flex flex-col gap-2 w-full md:w-1/4">
       <label className="text-xs text-gray-500">{label}</label>
       <input
+        className={`ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full ${error ? 'ring-red-500' : ''}`}
         type={type}
-        {...register(name)}
-        className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-        {...inputProps}
         defaultValue={defaultValue}
+        {...register(name)}
       />
-      {error?.message && (
-        <p className="text-xs text-red-400">{error.message.toString()}</p>
-      )}
+      {error && <p className="text-xs text-red-400">{error}</p>}
     </div>
   );
 };
