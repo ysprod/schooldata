@@ -30,7 +30,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
           </div>
           <Toaster />
           <Footer />
-
         </AuthUserProvider>
       </body>
     </html>

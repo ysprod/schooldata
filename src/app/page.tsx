@@ -2,11 +2,12 @@
 import { useRegister } from "@/hooks/useregister";
 import { useAuth } from "@/firebase/auth";
 import { useEffect } from "react";
-import Debut from "../components/debut";
+import SignupPage from "./(utilisateurs)/auth/signup/page";
+import LoaderCpt from "@/components/loader";
 
 const Homepage = () => {
   const { navigate } = useRegister();
-  const { authUser } = useAuth();
+  const { isLoading, authUser } = useAuth();
 
   useEffect(() => {
     if (authUser) {
@@ -14,7 +15,11 @@ const Homepage = () => {
     }
   }, [authUser, navigate]);
 
-  return <Debut />;
+  if (isLoading) {
+    return <LoaderCpt />;
+  }
+
+  return <SignupPage />;
 };
 
 export default Homepage;

@@ -1,14 +1,12 @@
 export interface User {
-    id: string;
-    firstname: string;
-    lastname: string;
-    password: string;
-    email: string;
+    id?: string;
+    firstname?: string;
+    lastname?: string;
+    password?: string;
     emailVerified?: Date | null;
-    phone: string;
     image?: string | null;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
   }
 
   export interface Student {
@@ -98,6 +96,19 @@ export interface User {
     hd?: string;               // Domaine Google Apps (facultatif)
     phone_number?: string;     // Numéro de téléphone (rarement fourni)
   }
+
+  export interface Personne {
+  
+  }
+  
+  export interface User {
+    nom?: string
+    prenoms?: string
+    phone?: string
+    email?: string
+    displayName?:string
+  }
+  
   
           
   

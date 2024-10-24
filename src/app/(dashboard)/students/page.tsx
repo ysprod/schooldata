@@ -9,17 +9,16 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Student } from "@prisma/client";
 import Chargeur from "@/components/chargeur";
 import { ChevronDownIcon } from "@/components/nextui/ChevronDownIcon";
 import { SearchIcon } from "@/components/nextui/SearchIcon";
-import { VerticalDotsIcon } from "@/components/nextui/VerticalDotsIcon";
 import { capitalize, formatDate } from "@/app/utils/functions";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { toast } from "@/components/ui/use-toast"; 
 import { DeleteIcon } from "@/components/nextui/Deleteicon";
 import { EditIcon } from "@/components/nextui/Editicon";
 import { EyeIcon } from "@/components/nextui/Eyeicon";
+import { Student } from "@/lib/interfaces";
 
 export const statusColorMap: Record<string, ChipProps["color"]> = {
   Masculin: "success",

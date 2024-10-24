@@ -1,208 +1,141 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client";
-
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
-import { Button, Checkbox, Input, Link } from "@nextui-org/react";
-import { useEffect, useState } from "react";
-import { z } from "zod";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { passwordStrength } from "check-password-strength";
-import PasswordStrength from "./PasswordStrength";
-import { useRouter } from "next/navigation";
-import { toast } from "@/components/ui/use-toast";
-
-
-
-const FormSchema = z
-  .object({
-    firstName: z
-      .string()
-      .min(2, "Le nom comprend au moins deux caractères")
-      .max(45, "Le nom comprend au maximum 45 caractères")
-      .regex(
-        new RegExp("^[a-zA-Z]+$"),
-        "Les caractères speciaux ne sont pas acceptés!"
-      ),
-    lastName: z
-      .string()
-      .min(2, "Le prenom comprend au moins deux caractères")
-      .max(45, "Le prenom comprend au maximum 45 caractères")
-      .regex(
-        new RegExp("^[a-zA-Z]+$"),
-        "Les caractères speciaux ne sont pas acceptés!"
-      ),
-    email: z.string().email("Saisissez une adresse email valide"),
-    phone: z
-      .string()
-      .min(2, "Le prenom comprend au moins deux caractères")
-      .max(45, "Le prenom comprend au maximum 45 caractères"),
-    password: z
-      .string()
-      .min(6, "Le mot de passe doit être au moins 6 caractères ")
-      .max(50, "Le mot de passe doit être inférieur à 50 caractères"),
-    confirmPassword: z
-      .string()
-      .min(
-        6,
-        "La confirmation du mot de passe doit être au moins 6 caractères  "
-      )
-      .max(
-        50,
-        "La confirmation du mot de passe doit être inférieur à 50 caractères"
-      ),
-    accepted: z.literal(true, {
-      errorMap: () => ({
-        message: "Veuillez accepter les conditions d utilisation",
-      }),
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Le mot de passe et la confirmation doivent être identiques",
-    path: ["confirmPassword"],
-  });
-
-type InputType = z.infer<typeof FormSchema>;
+import { Button, Checkbox, Input } from "@nextui-org/react";
+import { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { FcGoogle } from "react-icons/fc";
+import { useRegister } from "@/hooks/useregister";
 
 const SignUpForm = () => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    watch,
-    formState: { errors },
-  } = useForm<InputType>({
-    resolver: zodResolver(FormSchema),
-  });
-  const [passStrength, setPassStrength] = useState(0);
+  const { isSubmitting, initialValues, schema, handleSubmit, navigate, googleSignUp } = useRegister();
   const [isVisiblePass, setIsVisiblePass] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
+  const toggleVisiblePass = () => setIsVisiblePass((prev) => !prev);
 
-  useEffect(() => {
-    setPassStrength(passwordStrength(watch().password).id);
-  }, [watch().password]);
-  const toggleVisblePass = () => setIsVisiblePass((prev) => !prev);
-
-  const saveUser: SubmitHandler<InputType> = async (data) => {
-    const { accepted, confirmPassword, ...user } = data;
-    const formattedUser = {
-      firstname: user.firstName,
-      lastname: user.lastName,
-      password: user.password,
-      email: user.email,
-      phone: user.phone,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    try {
-      setIsSubmitting(true);
-      const result = null;
-      console.log(result);
-      if (result) {
-        router.push("/auth/signin");
-      }
-    } catch (error) {
-      setIsSubmitting(false);
-      toast({
-        description:
-          "Une erreur s est produite lors de l enregistrement du utilisateur.",
-      });
-      console.error(error);
-    }
-  };
   return (
-    <form
-      onSubmit={handleSubmit(saveUser)}
-      className="grid grid-cols-2 gap-3 p-2 border rounded-md shadow place-self-stretch"
+    <Formik
+      initialValues={initialValues}
+      validationSchema={schema}
+      onSubmit={handleSubmit}
     >
-      <Input
-        errorMessage={errors.firstName?.message}
-        isInvalid={!!errors.firstName}
-        {...register("firstName")}
-        label="Nom"
-      />
-      <Input
-        errorMessage={errors.lastName?.message}
-        isInvalid={!!errors.lastName}
-        {...register("lastName")}
-        label="Prenom"
-      />
-      <Input
-        errorMessage={errors.email?.message}
-        isInvalid={!!errors.email}
-        {...register("email")}
-        className="col-span-2"
-        label="Email"
-      />{" "}
-      <Input
-        errorMessage={errors.phone?.message}
-        isInvalid={!!errors.phone}
-        {...register("phone")}
-        className="col-span-2"
-        label="Téléphone"
-      />{" "}
-      <Input
-        errorMessage={errors.password?.message}
-        isInvalid={!!errors.password}
-        {...register("password")}
-        className="col-span-2"
-        label="Mot de passe"
-        type={isVisiblePass ? "text" : "password"}
-        endContent={
-          isVisiblePass ? (
-            <EyeSlashIcon
-              className="w-4 cursor-pointer"
-              onClick={toggleVisblePass}
-            />
-          ) : (
-            <EyeIcon
-              className="w-4 cursor-pointer"
-              onClick={toggleVisblePass}
-            />
-          )
-        }
-      />
-      <PasswordStrength passStrength={passStrength} />
-      <Input
-        errorMessage={errors.confirmPassword?.message}
-        isInvalid={!!errors.confirmPassword}
-        {...register("confirmPassword")}
-        className="col-span-2"
-        label="Confirmer le mot de passe"
-        type={isVisiblePass ? "text" : "password"}
-      />
-      <Controller
-        control={control}
-        name="accepted"
-        render={({ field }) => (
-          <Checkbox
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            className="col-span-2"
-          >
-            <span>
-              {" "}
-              J accepte les termes d utilisation
-            </span>
-          </Checkbox>
-        )}
-      />
-      {!!errors.accepted && (
-        <p className="text-red-500">{errors.accepted.message}</p>
-      )}
-      <div className="flex justify-center col-span-2">
-        <Button
-          disabled={isSubmitting}
-          className="w-48 p-2 px-6 py-2 font-bold text-white bg-orange-400 rounded cursor-pointer btn-get-started scrollto md:p-4"
-          color="primary"
-          type="submit"
-        >
-          {isSubmitting ? "Connexion en cours..." : "Enregistrer"}
-        </Button>
-      </div>
-    </form>
+      <Form className="grid grid-cols-2 gap-3 p-2 border rounded-md shadow place-self-stretch">
+        <div className="m-auto">
+          <div className="m-auto">
+            <p className="mt-6 ml-1">
+              Vous avez déjà un compte ?{" "}
+              <span className="underline hover:text-blue-400 cursor-pointer"
+                onClick={() => { navigate("login"); }}
+              >
+                Se connecter
+              </span>
+            </p>
+            <div
+              className="bg-black/[0.05] text-white w-full py-4 mt-10 rounded-full transition-transform hover:bg-black/[0.8] active:scale-90 flex justify-center items-center gap-4 cursor-pointer group"
+              onClick={() => { googleSignUp(); }}
+            >
+              <FcGoogle size={22} />
+              <span className="font-medium text-black group-hover:text-white">
+                Se connecter avec Google
+              </span>
+            </div>
+          </div>
+          <div>
+            <br />
+            <h2 className="text-5xl font-semibold block text-nowrap">Inscription Ecole +</h2>
+            <Field name="nom">
+              {({ field, meta }: any) => (
+                <Input
+                  {...field}
+                  label="Nom"
+                  errorMessage={meta.touched && meta.error}
+                  isInvalid={!!meta.error && meta.touched} />
+              )}
+            </Field>
+            <Field name="prenoms">
+              {({ field, meta }: any) => (
+                <Input
+                  {...field}
+                  label="Prénoms"
+                  errorMessage={meta.touched && meta.error}
+                  isInvalid={!!meta.error && meta.touched} />
+              )}
+            </Field>
+            <Field name="email">
+              {({ field, meta }: any) => (
+                <Input
+                  {...field}
+                  label="Email"
+                  className="col-span-2"
+                  errorMessage={meta.touched && meta.error}
+                  isInvalid={!!meta.error && meta.touched} />
+              )}
+            </Field>
+            <Field name="phone">
+              {({ field, meta }: any) => (
+                <Input
+                  {...field}
+                  label="Téléphone"
+                  className="col-span-2"
+                  errorMessage={meta.touched && meta.error}
+                  isInvalid={!!meta.error && meta.touched} />
+              )}
+            </Field>
+            <Field name="password">
+              {({ field, meta }: any) => (
+                <Input
+                  {...field}
+                  label="Mot de passe"
+                  className="col-span-2"
+                  type={isVisiblePass ? "text" : "password"}
+                  endContent={isVisiblePass ? (
+                    <EyeSlashIcon
+                      className="w-4 cursor-pointer"
+                      onClick={toggleVisiblePass} />
+                  ) : (
+                    <EyeIcon
+                      className="w-4 cursor-pointer"
+                      onClick={toggleVisiblePass} />
+                  )}
+                  errorMessage={meta.touched && meta.error}
+                  isInvalid={!!meta.error && meta.touched} />
+              )}
+            </Field>
+            <Field name="confirmPassword">
+              {({ field, meta }: any) => (
+                <Input
+                  {...field}
+                  label="Confirmer le mot de passe"
+                  className="col-span-2"
+                  type={isVisiblePass ? "text" : "password"}
+                  errorMessage={meta.touched && meta.error}
+                  isInvalid={!!meta.error && meta.touched} />
+              )}
+            </Field>
+            <Field name="accepted" type="checkbox">
+              {({ field, meta }: any) => (
+                <Checkbox
+                  {...field}
+                  className="col-span-2"
+                  isInvalid={!!meta.error && meta.touched}
+                >
+                  <span>J`accepte les termes d`utilisation</span>
+                </Checkbox>
+              )}
+            </Field>
+            <ErrorMessage name="accepted" component="p" className="text-red-500" />
+            <br /> <br />
+            <div className="flex justify-center col-span-2 pt-4">
+              <Button
+                disabled={isSubmitting}
+                className="w-48 p-2 px-6 py-2 font-bold text-white bg-orange-400 rounded cursor-pointer btn-get-started scrollto md:p-4"
+                color="primary"
+                type="submit"
+              >
+                {isSubmitting ? "Connexion en cours..." : "Enregistrer"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Form>
+    </Formik>
   );
 };
 

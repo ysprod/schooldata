@@ -1,6 +1,5 @@
 "use server";
-import { Result } from "./utils/types";
-import { Student } from "@prisma/client";
+import { Result } from "@/app/utils/types";
 import { StudentFormProps } from "@/components/demandeForm";
 
 export async function handleDemandeUpdate(formData: StudentFormProps, id: number): Promise<Result> {

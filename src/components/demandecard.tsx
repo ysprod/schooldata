@@ -1,4 +1,5 @@
 import DateFormatter from "@/lib/dateformatter";
+import { Student } from "@/lib/interfaces";
 import {
   Button,
   Card,
@@ -9,7 +10,6 @@ import {
   Link,
 } from "@nextui-org/react";
 import React from "react";
-import { Student } from "@prisma/client";
 
 export interface DemandecardProps {
   affichebouton?: boolean;

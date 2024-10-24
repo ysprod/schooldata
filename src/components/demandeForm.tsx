@@ -1,38 +1,7 @@
  
-import { Student } from "@prisma/client";
-import { z } from "zod";
- 
-export const DemandeFormSchema = z.object({
-  nom: z.string(),
-  prenom: z.string(),
-  sexe: z.string(),
-  datenaissance: z.string(),
-  lieunaissance: z.string(),
-  nationalite: z.string(),
-  datedenaturalisation: z.string(),
-  datedecretdenaturalisation: z.string(),
-  nometprenomspere: z.string(),
-  nometprenomsmere: z.string(),
-  nationalitepere: z.string(),
-  nationalitemere: z.string(),
-  profession: z.string(),
-  domicile: z.string(),
-  adresse: z.string(),
-  telephone: z.string(),
-  numeroelecteur: z.string(),
-  numerocni: z.string(),
-  intituledeliste: z.string(),
-  resident: z.string(),
-  numerodordre: z.string(),
-  partiougroupementpolitique: z.string(),
-  numerocirconscription: z.string(),
-  nomcirconscription: z.string(),
-  datededeclaration: z.string(),
-  lieudedeclaration: z.string(),
-});
+import { Student } from "@/lib/interfaces";
 
 export type StudentFormProps = Omit<Student, "id">;
-export type DemandeInputType = z.infer<typeof DemandeFormSchema>;
 
 export const dataForm: StudentFormProps = {
   userId: "0",

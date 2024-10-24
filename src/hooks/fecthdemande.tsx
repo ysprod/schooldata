@@ -1,8 +1,7 @@
 import { toast } from "@/components/ui/use-toast";
 import { useCallback } from "react";
-import { Student } from "@prisma/client";
-import { RetrieveDemande } from "@/app/actions";
 import { formatDateinverse } from "@/app/utils/functions";
+import { Student } from "@/lib/interfaces";
 
 const ERRORMESSAGE = "Erreur lors de la récupération de la demande.";
 type SetFormData = React.Dispatch<React.SetStateAction<Student | null>>;
@@ -17,7 +16,7 @@ export const useFetchDemande = (
   const fetchDemande = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await RetrieveDemande(id);
+      const data =null;
       if (data) {
         data.birthday = formatDateinverse(data.birthday);
         setFormData(data);
@@ -31,7 +30,7 @@ export const useFetchDemande = (
     } finally {
       setIsLoading(false);
     }
-  }, [id, setFormData, setIsLoading]);
+  }, [setFormData, setIsLoading]);
 
   return fetchDemande;
 };
